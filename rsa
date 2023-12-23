@@ -4,31 +4,20 @@ import sys
 import random
 import time
 
-
 def is_prime(num, k=20):
     '''
-    Check if a given number is prime using the Miller-Rabin primality test.
-
-    :param num: The number to be tested for primality.
-    :param k: Number of rounds for the Miller-Rabin test. Default is 20 for a reasonable level of accuracy.
-    :return: True if the number is prime, False otherwise.
+    Miller-Rabin primality test to check if a number is prime.
     '''
-
-    # Base cases for 2 and 3
     if num == 2 or num == 3:
         return True
-    # Check if number is less than 2 or even
     if num < 2 or num % 2 == 0:
         return False
 
-    # Factorize num - 1 into d * 2^r
-    d = num - 1
-    r = 0
+    d, r = num - 1, 0
     while d % 2 == 0:
         d //= 2
         r += 1
 
-    # Perform Miller-Rabin test for k rounds
     for _ in range(k):
         a = random.randint(2, num - 2)
         x = pow(a, d, num)
@@ -43,18 +32,38 @@ def is_prime(num, k=20):
 
     return True
 
+def factorize_rsa_number(num, time_limit=5):
+    '''
+    Factorize an RSA number into its prime factors.
+    '''
+    start_time = time.time()
+
+    for i in range(2, num // 2):
+        if num % i == 0 and is_prime(i) and is_prime(num // i):
+            print(f"{num}={i}*{num//i}")
+            return
+
+        if time.time() - start_time > time_limit:
+            print("Time limit exceeded")
+            sys.exit()
+
+    print(f"No prime factorization found for {num}")
 
 if __name__ == "__main__":
-    # Check if the correct number of command-line arguments is provided
     if len(sys.argv) != 2:
-        print("Usage: python script.py <number>")
-        sys.exit(1)  # Exit with an error code
+        print("Usage: ./rsa.py <filename>")
+        sys.exit()
 
-    # Extract the number from command-line argument
-    number_to_test = int(sys.argv[1])
+    input_file = sys.argv[1]
 
-    # Perform primality test
-    if is_prime(number_to_test):
-        print(f"{number_to_test} is a prime number.")
-    else:
-        print(f"{number_to_test} is not a prime number.")
+    try:
+        with open(input_file, 'r') as f:
+            rsa_number = int(f.readline().strip())
+    except FileNotFoundError:
+        print("File not found")
+        sys.exit()
+    except ValueError:
+        print("Invalid RSA number in the file")
+        sys.exit()
+
+    factorize_rsa_number(rsa_number)
