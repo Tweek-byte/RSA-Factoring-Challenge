@@ -10,32 +10,37 @@ def factorize_number(n):
             return i, n // i
     return n, 1
 
-def factorize_file(filename):
+def read_numbers_from_file(filename):
     try:
-        # Read numbers from the file
         with open(filename, 'r') as file:
             numbers = file.read().splitlines()
+        return numbers
     except FileNotFoundError:
         print(f"Error: File '{filename}' not found.")
         sys.exit(1)
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error: Unable to read file '{filename}'. {e}")
         sys.exit(1)
+
+def validate_and_convert_to_int(number, line_number):
+    try:
+        n = int(number)
+        if n <= 1:
+            raise ValueError("Number must be greater than 1.")
+        return n
+    except ValueError as ve:
+        print(f"Error: Line {line_number}: {ve}")
+        sys.exit(1)
+
+def factorize_file(filename):
+    numbers = read_numbers_from_file(filename)
 
     if not numbers:
         print("Error: Empty file.")
         sys.exit(1)
 
     for line_number, number in enumerate(numbers, start=1):
-        try:
-            # Convert the string to an integer
-            n = int(number)
-            if n <= 1:
-                print(f"Error: Line {line_number}: Number must be greater than 1.")
-                sys.exit(1)
-        except ValueError:
-            print(f"Error: Line {line_number}: Invalid number '{number}' in the file.")
-            sys.exit(1)
+        n = validate_and_convert_to_int(number, line_number)
 
         # Factorize the number and print the result
         p, q = factorize_number(n)
