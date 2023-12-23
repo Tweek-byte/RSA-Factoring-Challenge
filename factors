@@ -43,17 +43,19 @@ if __name__ == "__main__":
 
     start_time = time.time()
 
+    factorizations = []  # Collect factorizations for sorting
+
     '''
     Loops over each line (which should contain one natural number per line),
     and calls factorize on each number.
     If factorize returns a tuple of factors,
-    it prints the factorization in the desired format.
+    it appends the factorization to the list for sorting.
     '''
     for line in lines:
         num = int(line.strip())
         factors = factorize(num)
         if factors:
-            print(f"{num}={factors[0]}*{factors[1]}")
+            factorizations.append((num, factors[0], factors[1]))
 
         '''
         If the elapsed time exceeds 5 seconds,
@@ -62,3 +64,10 @@ if __name__ == "__main__":
         if time.time() - start_time > 5:
             print("Time limit exceeded")
             sys.exit(1)  # Exit with an error code
+
+    # Sort factorizations by the original numbers
+    sorted_factorizations = sorted(factorizations, key=lambda x: x[0])
+
+    # Print sorted factorizations
+    for factorization in sorted_factorizations:
+        print(f"{factorization[0]}={factorization[1]}*{factorization[2]}")
