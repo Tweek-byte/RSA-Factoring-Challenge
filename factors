@@ -10,11 +10,23 @@ def factorize_number(n):
     return n, 1
 
 def factorize_file(filename):
-    with open(filename, 'r') as file:
-        numbers = file.read().splitlines()
+    try:
+        with open(filename, 'r') as file:
+            numbers = file.read().splitlines()
+    except FileNotFoundError:
+        print(f"Error: File '{filename}' not found.")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Error: {e}")
+        sys.exit(1)
 
     for number in numbers:
-        n = int(number)
+        try:
+            n = int(number)
+        except ValueError:
+            print(f"Error: Invalid number '{number}' in the file.")
+            sys.exit(1)
+
         p, q = factorize_number(n)
         print(f"{n}={p}*{q}")
 
