@@ -4,6 +4,7 @@ import sys
 import math
 
 def factorize_number(n):
+    # Factorize a number into two smaller numbers
     for i in range(2, int(math.sqrt(n)) + 1):
         if n % i == 0:
             return i, n // i
@@ -11,6 +12,7 @@ def factorize_number(n):
 
 def factorize_file(filename):
     try:
+        # Read numbers from the file
         with open(filename, 'r') as file:
             numbers = file.read().splitlines()
     except FileNotFoundError:
@@ -20,13 +22,22 @@ def factorize_file(filename):
         print(f"Error: {e}")
         sys.exit(1)
 
-    for number in numbers:
+    if not numbers:
+        print("Error: Empty file.")
+        sys.exit(1)
+
+    for line_number, number in enumerate(numbers, start=1):
         try:
+            # Convert the string to an integer
             n = int(number)
+            if n <= 1:
+                print(f"Error: Line {line_number}: Number must be greater than 1.")
+                sys.exit(1)
         except ValueError:
-            print(f"Error: Invalid number '{number}' in the file.")
+            print(f"Error: Line {line_number}: Invalid number '{number}' in the file.")
             sys.exit(1)
 
+        # Factorize the number and print the result
         p, q = factorize_number(n)
         print(f"{n}={p}*{q}")
 
