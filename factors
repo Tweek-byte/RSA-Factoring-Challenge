@@ -68,6 +68,8 @@ if __name__ == "__main__":
     # Sort factorizations by the original numbers
     sorted_factorizations = sorted(factorizations, key=lambda x: x[0])
 
-    # Print sorted factorizations
+    # Print sorted factorizations with the exact format
     for factorization in sorted_factorizations:
         print(f"{factorization[0]}={factorization[1]}*{factorization[2]}")
+
+    sys.exit(0)  # Exit with success code
